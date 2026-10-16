@@ -1,82 +1,88 @@
+# جلسه ۰۱ — ماشین حالت متناهی اولیه
 
-# Session 01 — Initial FSM
+## ۱. هدف
 
-## 1. Objective
+هدف این جلسه، تعریف یک ماشین حالت متناهی (FSM) اولیه برای دستگاه فروش خودکار هوشمند است.
 
-The objective of this session is to define an initial Finite-State Machine (FSM) for the Smart Vending Machine.
+## ۲. حالت‌های سیستم
 
-## 2. System States
+- **آماده (Idle):** دستگاه منتظر انتخاب محصول است.
+- **دریافت پرداخت (Payment):** دستگاه وجه را از طریق سکه یا کارت دریافت می‌کند.
+- **اعتبارسنجی (Validation):** دستگاه اعتبار پرداخت را بررسی می‌کند و از موجود بودن محصول اطمینان حاصل می‌کند.
+- **تحویل محصول (Dispensing):** دستگاه محصول انتخاب‌شده را تحویل می‌دهد.
+- **بازگرداندن باقی‌مانده پول یا بازپرداخت (ChangeRefund):** دستگاه باقی‌مانده پول را برمی‌گرداند یا وجه پرداخت‌شده را بازپرداخت می‌کند.
+- **خطا (Error):** فرایند تحویل محصول با شکست مواجه شده است.
 
-- Idle: The machine is waiting for a product selection.
-- Payment: The machine receives payment through coins or a card.
-- Validation: The machine validates the payment and checks product availability.
-- Dispensing: The machine dispenses the selected product.
-- ChangeRefund: The machine returns change or refunds the payment.
-- Error: Product dispensing has failed.
+## ۳. ورودی‌ها
 
-## 3. Inputs
+- انتخاب محصول
+- وارد کردن سکه
+- پرداخت موفق
+- پرداخت ناکافی
+- لغو تراکنش
+- پرداخت نامعتبر
+- وضعیت موجودی محصول
+- نتیجه تحویل محصول
 
-- Product selection
-- Coin insertion
-- Successful payment
-- Insufficient payment
-- Transaction cancellation
-- Invalid payment
-- Product availability
-- Product dispensing result
+## ۴. خروجی‌ها
 
-## 4. Outputs
+- نمایش قیمت محصول
+- وضعیت پرداخت
+- نمایش مبلغ باقی‌مانده
+- فرمان تحویل محصول
+- بازگرداندن باقی‌مانده پول یا بازپرداخت وجه
+- پیام خطا
+- پیام تکمیل تراکنش
 
-- Product price
-- Payment status
-- Remaining amount
-- Product dispensing command
-- Change or refund
-- Error message
-- Transaction completion message
-
-## 5. Initial FSM Diagram
+## ۵. نمودار اولیه ماشین حالت
 
 ```mermaid
 stateDiagram-v2
     direction LR
 
+    state "آماده" as Idle
+    state "دریافت پرداخت" as Payment
+    state "اعتبارسنجی" as Validation
+    state "تحویل محصول" as Dispensing
+    state "بازپرداخت یا بازگرداندن باقی‌مانده پول" as ChangeRefund
+    state "خطا" as Error
+
     [*] --> Idle
-    Idle --> Payment: Select product
-    Payment --> Payment: Insufficient amount
-    Payment --> Validation: Payment complete
-    Payment --> ChangeRefund: Cancel transaction
+    Idle --> Payment: انتخاب محصول
+    Payment --> Payment: مبلغ ناکافی
+    Payment --> Validation: تکمیل پرداخت
+    Payment --> ChangeRefund: لغو تراکنش
 
-    Validation --> Dispensing: Payment valid and stock available
-    Validation --> ChangeRefund: Invalid payment
-    Validation --> ChangeRefund: Product unavailable
+    Validation --> Dispensing: پرداخت معتبر و محصول موجود
+    Validation --> ChangeRefund: پرداخت نامعتبر
+    Validation --> ChangeRefund: محصول ناموجود
 
-    Dispensing --> ChangeRefund: Product delivered
-    Dispensing --> Error: Dispensing failed
-    Error --> ChangeRefund: Refund transaction
+    Dispensing --> ChangeRefund: تحویل محصول
+    Dispensing --> Error: شکست در تحویل محصول
+    Error --> ChangeRefund: انجام بازپرداخت
 
-    ChangeRefund --> Idle: Refund or change completed
+    ChangeRefund --> Idle: تکمیل بازپرداخت یا بازگرداندن باقی‌مانده پول
 ```
 
-## 6. State Transition Table
+## ۶. جدول انتقال حالت‌ها
 
-| Current State | Input / Condition | Next State | Output |
+| حالت فعلی | ورودی / شرط | حالت بعدی | خروجی |
 |---|---|---|---|
-| Idle | Select product | Payment | Display price |
-| Payment | Insufficient amount | Payment | Display remaining amount |
-| Payment | Payment complete | Validation | Start validation |
-| Payment | Cancel transaction | ChangeRefund | Refund request |
-| Validation | Valid payment and stock available | Dispensing | Dispensing command |
-| Validation | Invalid payment | ChangeRefund | Error and refund request |
-| Validation | Product unavailable | ChangeRefund | Unavailable message and refund request |
-| Dispensing | Product delivered | ChangeRefund | Delivery confirmation |
-| Dispensing | Dispensing failed | Error | Error message |
-| Error | Refund transaction | ChangeRefund | Refund request |
-| ChangeRefund | Refund or change completed | Idle | Transaction completion |
+| آماده | انتخاب محصول | دریافت پرداخت | نمایش قیمت |
+| دریافت پرداخت | مبلغ ناکافی | دریافت پرداخت | نمایش مبلغ باقی‌مانده |
+| دریافت پرداخت | تکمیل پرداخت | اعتبارسنجی | شروع بررسی پرداخت |
+| دریافت پرداخت | لغو تراکنش | بازپرداخت یا بازگرداندن باقی‌مانده پول | درخواست بازپرداخت |
+| اعتبارسنجی | پرداخت معتبر و محصول موجود | تحویل محصول | فرمان تحویل محصول |
+| اعتبارسنجی | پرداخت نامعتبر | بازپرداخت یا بازگرداندن باقی‌مانده پول | نمایش خطا و درخواست بازپرداخت |
+| اعتبارسنجی | محصول ناموجود | بازپرداخت یا بازگرداندن باقی‌مانده پول | اعلام ناموجود بودن محصول و درخواست بازپرداخت |
+| تحویل محصول | تحویل موفق | بازپرداخت یا بازگرداندن باقی‌مانده پول | تأیید تحویل |
+| تحویل محصول | شکست در تحویل محصول | خطا | نمایش پیام خطا |
+| خطا | انجام بازپرداخت | بازپرداخت یا بازگرداندن باقی‌مانده پول | درخواست بازپرداخت |
+| بازپرداخت یا بازگرداندن باقی‌مانده پول | تکمیل بازپرداخت یا بازگرداندن باقی‌مانده پول | آماده | پیام تکمیل تراکنش |
 
-## 7. Assumptions and Limitations
+## ۷. فرضیات و محدودیت‌ها
 
-- The initial state is Idle.
-- Payment is represented at an abstract level; detailed banking operations are outside the initial model.
-- Product availability is treated as an input to the validation step.
-- Inventory tracking and detailed refund failure handling will be refined in later sessions.
+- حالت اولیه دستگاه، حالت **آماده** است.
+- پرداخت به‌صورت انتزاعی مدل‌سازی شده است؛ جزئیات عملیات بانکی خارج از محدوده مدل اولیه هستند.
+- موجود بودن محصول به‌عنوان ورودی مرحله اعتبارسنجی در نظر گرفته می‌شود.
+- مدیریت موجودی محصولات و بررسی دقیق شکست در فرایند بازپرداخت در جلسات بعدی تکمیل خواهند شد.
