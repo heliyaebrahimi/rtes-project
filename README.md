@@ -1,55 +1,87 @@
-# rtes-project
-Modeling a Smart Vending Machine using Finite-State Machines
+# 🥤 دستگاه فروش خودکار هوشمند
+### پروژه درس سیستم‌های تعبیه‌شده
 
-# Smart Vending Machine
+---
 
-## Project Overview
+## 📌 معرفی پروژه
 
-This project focuses on modeling a Smart Vending Machine as a discrete system using Finite-State Machines (FSMs).
+این پروژه با هدف مدل‌سازی رفتار یک **دستگاه فروش خودکار هوشمند** طراحی شده است. دستگاه به کاربر اجازه می‌دهد محصول موردنظر خود را انتخاب کند، هزینه آن را بپردازد و محصول را دریافت کند.
 
-The system allows users to select products, make payments using coins or a payment card, validate transactions, receive products, and obtain any remaining change.
+سیستم باید بتواند پرداخت را بررسی کند، موجود بودن محصول را تشخیص دهد و در صورت لغو عملیات یا بروز خطا، وجه پرداخت‌شده یا باقی‌مانده پول را بازگرداند.
 
-## Main Features
+## 🎯 اهداف پروژه
 
-- Product selection
-- Coin and card payment
-- Payment validation
-- Product availability checking
-- Product dispensing
-- Change return and refund handling
-- Basic inventory management
+- مدل‌سازی رفتار سیستم با استفاده از ماشین حالت متناهی
+- شناسایی حالت‌ها، ورودی‌ها و خروجی‌های سیستم
+- تعریف قوانین انتقال بین حالت‌ها
+- طراحی نمودار حالت و جدول انتقال
+- بررسی رفتار سیستم در شرایط عادی و هنگام بروز خطا
+- توسعه تدریجی مدل در جلسات آینده
 
-## System Inputs
+## ⚙️ قابلیت‌های اصلی
 
-- Product selection
-- Coin insertion
-- Card payment result
-- Transaction cancellation
-- Product availability status
-- Product dispensing result
+| قابلیت | توضیح |
+|---|---|
+| 🛒 انتخاب محصول | انتخاب محصول موردنظر توسط کاربر |
+| 💳 پرداخت | دریافت وجه از طریق سکه یا کارت |
+| 🔍 اعتبارسنجی | بررسی معتبر بودن پرداخت |
+| 📦 بررسی موجودی | اطمینان از موجود بودن محصول |
+| ✅ تحویل محصول | تحویل محصول پس از تأیید پرداخت |
+| 💰 بازپرداخت | بازگرداندن وجه در صورت لغو یا بروز خطا |
+| ⚠️ مدیریت خطا | شناسایی و نمایش خطاهای احتمالی |
 
-## System Outputs
+## 🔄 روند کلی عملکرد
 
-- Product price display
-- Payment status messages
-- Remaining amount display
-- Product dispensing command
-- Change return or refund
-- Transaction completion message
+۱. دستگاه منتظر انتخاب محصول می‌ماند.
 
-## Initial Modeling Scope
+۲. پس از انتخاب محصول، قیمت آن نمایش داده می‌شود.
 
-The initial model focuses on the main purchase flow, including product selection, payment, validation, product dispensing, and refund or change return.
+۳. دستگاه پرداخت را دریافت می‌کند.
 
-Detailed payment processing and inventory management will be refined in later iterations.
+۴. اعتبار پرداخت و موجودی محصول بررسی می‌شود.
 
-## Project Structure
+۵. در صورت تأیید شرایط، محصول تحویل داده می‌شود.
 
-- `README.md`: Project overview and system description
-- `sessions/session-01.md`: Initial FSM diagram and state transition table
+۶. در صورت بروز خطا یا لغو عملیات، فرایند بازپرداخت انجام می‌شود.
 
-## Modeling Approach
+۷. پس از پایان عملیات، دستگاه به حالت آماده بازمی‌گردد.
 
-The system will initially be modeled as a finite-state machine using Mermaid diagrams in Markdown files.
+## 🧩 روش مدل‌سازی
 
-The model will be refined as additional requirements and edge cases are identified.
+در نسخه اولیه، سیستم با استفاده از **ماشین حالت متناهی** مدل‌سازی می‌شود.
+
+اجزای اصلی مدل عبارت‌اند از:
+
+- **حالت‌ها:** وضعیت‌های مختلف دستگاه
+- **ورودی‌ها:** رویدادهای دریافتی از کاربر یا اجزای سیستم
+- **خروجی‌ها:** پیام‌ها و اقدام‌های دستگاه
+- **تابع انتقال:** قوانین تغییر حالت سیستم
+- **حالت اولیه:** وضعیت آغازین دستگاه
+
+## 📁 ساختار مخزن
+
+```text
+rtes-project/
+├── README.md
+└── sessions/
+    └── session-01.md
+```
+
+| فایل | کاربرد |
+|---|---|
+| `README.md` | معرفی پروژه و اهداف آن |
+| `sessions/session-01.md` | مستندات جلسه اول، نمودار حالت و جدول انتقال |
+
+## 🚧 محدوده نسخه اولیه
+
+در این نسخه، هدف نمایش رفتار اصلی دستگاه است. پرداخت با سکه و کارت به‌صورت رویداد ورودی در نظر گرفته می‌شود و جزئیاتی مانند مدیریت عددی موجودی، محاسبه دقیق باقی‌مانده پول و سازوکار داخلی دستگاه در مراحل بعدی قابل توسعه هستند.
+
+## 📚 منابع
+
+- Lee & Seshia, *Introduction to Embedded Systems*
+- فصل سوم: سیستم‌های گسسته و ماشین‌های حالت متناهی
+
+---
+
+**وضعیت پروژه:** نسخه اولیه مدل‌سازی
+
